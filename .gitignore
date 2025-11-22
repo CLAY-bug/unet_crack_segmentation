@@ -1,0 +1,31 @@
+# 原则：代码、配置、文档进 Git；大文件、数据、模型参数全部忽略。
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# 虚拟环境
+venv/
+.env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+
+# 数据/模型（根据自己实际情况调整）
+data/
+datasets/
+checkpoints/
+logs/
+runs/
+*.pt
+*.pth
+*.h5
+*.ckpt
+
+# 其它大文件
+*.zip
+*.rar
+*.tar
+*.tar.gz
