@@ -1,31 +1,94 @@
-# 原则：代码、配置、文档进 Git；大文件、数据、模型参数全部忽略。
-# Python
+# =========================
+# Python 编译缓存
+# =========================
 __pycache__/
 *.py[cod]
+*.pyo
 *.so
 
-# 虚拟环境
+# =========================
+# 虚拟环境（常见名字都挡住）
+# =========================
 venv/
-.env/
 .venv/
+env/
+.env/
 
-# IDE
+# =========================
+# IDE / 编辑器配置
+# =========================
+# PyCharm
 .idea/
+# VSCode
 .vscode/
 
-# 数据/模型（根据自己实际情况调整）
+# =========================
+# Jupyter / 临时文件
+# =========================
+.ipynb_checkpoints/
+*.ipynb
+
+# =========================
+# 数据集与中间数据（按深度学习项目常见目录）
+# =========================
 data/
+dataset/
 datasets/
-checkpoints/
+raw_data/
+processed_data/
+tmp/
+temp/
+cache/
+output/
+outputs/
+
+# 如果你有单独存放裂缝数据集的目录，也可以写成：
+# crack_data/
+# crack_dataset/
+
+# =========================
+# 训练日志 & 可视化日志
+# =========================
 logs/
-runs/
+log/
+runs/             # tensorboard 默认目录
+events.out.tfevents.*
+
+# pytorch-lightning / 其他框架日志
+lightning_logs/
+wandb/
+
+# =========================
+# 模型权重 / checkpoint / 大文件
+# =========================
+checkpoints/
+models/
+weights/
 *.pt
 *.pth
-*.h5
 *.ckpt
+*.h5
+*.onnx
 
-# 其它大文件
+# =========================
+# 打包 / 压缩 / 中间产物
+# =========================
+dist/
+build/
+*.egg-info/
+*.log
+*.tmp
+
+# 常见压缩包
 *.zip
 *.rar
 *.tar
 *.tar.gz
+*.7z
+
+# =========================
+# 系统文件
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
