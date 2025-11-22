@@ -32,8 +32,6 @@ env/
 # 数据集与中间数据（按深度学习项目常见目录）
 # =========================
 data/
-dataset/
-datasets/
 raw_data/
 processed_data/
 tmp/
@@ -62,7 +60,6 @@ wandb/
 # 模型权重 / checkpoint / 大文件
 # =========================
 checkpoints/
-models/
 weights/
 *.pt
 *.pth

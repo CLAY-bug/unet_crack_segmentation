@@ -1,0 +1,32 @@
+# configs/default.yaml
+experiment_name: "unet_baseline"
+
+data:
+  root: "./data/processed"
+  train_images_dir: "train/images"
+  train_masks_dir: "train/masks"
+  val_images_dir: "val/images"
+  val_masks_dir: "val/masks"
+  image_size: [512, 512]
+  num_workers: 4
+  batch_size: 4
+
+model:
+  name: "unet"
+  in_channels: 1          # 如果是灰度裂缝图
+  num_classes: 2          # 背景/裂缝
+
+train:
+  epochs: 100
+  lr: 1e-3
+  weight_decay: 1e-4
+  resume: null
+
+loss:
+  type: "bce_dice"
+
+logging:
+  log_dir: "./logs"
+  save_dir: "./experiments"
+  save_interval: 5
+  val_interval: 1
