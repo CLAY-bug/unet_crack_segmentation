@@ -30,15 +30,6 @@ class Trainer:
         loss_fn: nn.Module,
         device: torch.device,
     ):
-        """
-        初始化训练器
-        
-        Args:
-            model: 要训练的神经网络模型
-            optimizer: 用于参数更新的优化器
-            loss_fn: 损失函数模块
-            device: 训练设备（torch.device对象）
-        """
         # 将模型移动到指定设备（CPU或GPU）
         self.model = model.to(device)
         self.optimizer = optimizer
@@ -47,14 +38,9 @@ class Trainer:
 
     def train_one_epoch(self, dataloader: DataLoader) -> Dict[str, float]:
         """
-        训练一个epoch
-        
-        该方法执行一个完整的训练epoch，包括前向传播、损失计算、反向传播和参数更新。
+        训练一个完整的epoch包括前向传播、损失计算、反向传播和参数更新。
         使用tqdm显示训练进度条。
-        
-        Args:
-            dataloader: 训练数据加载器
-            
+        Args: dataloader: 训练数据加载器
         Returns:
             Dict[str, float]: 包含训练指标的字典，格式为 {"loss": 平均损失值}
         """
@@ -90,13 +76,9 @@ class Trainer:
     def validate(self, dataloader: DataLoader) -> Dict[str, float]:
         """
         验证模型性能
-        
         该方法在验证集上评估模型性能，不进行梯度计算和参数更新。
         使用@torch.no_grad()装饰器禁用梯度计算以节省内存和加速推理。
-        
-        Args:
-            dataloader: 验证数据加载器
-            
+        Args:dataloader: 验证数据加载器
         Returns:
             Dict[str, float]: 包含验证指标的字典，格式为 {"loss": 平均损失值}
         """

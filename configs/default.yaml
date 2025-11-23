@@ -7,17 +7,17 @@ data:
   train_masks_dir: "train/masks"
   val_images_dir: "val/images"
   val_masks_dir: "val/masks"
-  image_size: [512, 512]
-  num_workers: 4
+  image_size: [448, 448]
+  num_workers: 0
   batch_size: 4
 
 model:
   name: "unet"
   in_channels: 1          # 如果是灰度裂缝图
-  num_classes: 2          # 背景/裂缝
+  num_classes: 1          # 背景/裂缝
 
 train:
-  epochs: 100
+  epochs: 2
   lr: 1e-3
   weight_decay: 1e-4
   resume: null

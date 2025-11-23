@@ -1,5 +1,7 @@
 """训练入口脚本
 
+整体流程：Yaml配置 -> Dataset/Dataloader -> UNet -> Loss -> Trainer
+
 该文件负责完整的训练流程组织，包括：
 1) 读取配置文件并解析超参数
 2) 构建训练/验证数据集与 DataLoader
@@ -23,7 +25,7 @@
 # 基础库与项目组件导入
 # -----------------------------
 import os  # 路径拼接与文件系统操作
-import torch  # PyTorch 主库
+import torch
 from torch.utils.data import DataLoader  # 批量数据加载器
 from torch import nn  # 常用损失函数与网络组件
 
@@ -43,9 +45,9 @@ def main():
     - 初始化 UNet 模型、优化器与损失函数
     - 逐轮训练与验证，输出损失指标
     """
+
     # 读取配置文件（默认位于项目根目录下的 `configs/default.yaml`）
     cfg = load_config("./configs/default.yaml")
-
     # 自动选择设备：如可用则使用 GPU，否则退回 CPU
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -78,15 +80,15 @@ def main():
 
     # 初始化 UNet 模型：输入通道数与类别数由配置决定
     model = UNet(
-        in_channels=cfg.model.in_channels,
+        in_channels=cfg.model.in_channels, # 灰度图为1， RGB图为3
         num_classes=cfg.model.num_classes,
     )
 
     # 优化器选用 Adam：学习率与权重衰减来自配置
     optimizer = torch.optim.Adam(
         model.parameters(),
-        lr=cfg.train.lr,
-        weight_decay=cfg.train.weight_decay,
+        lr=float(cfg.train.lr),
+        weight_decay=float(cfg.train.weight_decay),
     )
 
     # 先占位：后续可替换为 BCE + Dice 组合损失以提升稳定性与收敛
