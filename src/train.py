@@ -26,9 +26,11 @@
 # -----------------------------
 import os  # 路径拼接与文件系统操作
 import torch
+from datetime import datetime
 from torch.utils.data import DataLoader  # 批量数据加载器
 from torch import nn  # 常用损失函数与网络组件
 
+from unet_crack_segmentation.utils.visualization import visualize_predictions
 from unet_crack_segmentation.config import load_config  # 配置加载函数
 from unet_crack_segmentation.datasets.crack_dataset import CrackSegmentationDataset  # 裂缝分割数据集
 from unet_crack_segmentation.models.unet import UNet  # UNet 模型定义
@@ -45,11 +47,16 @@ def main():
     - 初始化 UNet 模型、优化器与损失函数
     - 逐轮训练与验证，输出损失指标
     """
+    run_id = datetime.now().strftime("%Y%m%d-%H%M%S")
 
     # 读取配置文件（默认位于项目根目录下的 `configs/default.yaml`）
     cfg = load_config("./configs/default.yaml")
     # 自动选择设备：如可用则使用 GPU，否则退回 CPU
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    # 当前这次实验的总目录，比如: ./experiments/unet_baseline_20251124-153022
+    exp_dir = os.path.join(cfg.logging.save_dir, f"{cfg.experiment_name}_{run_id}")
+    os.makedirs(exp_dir, exist_ok=True)
 
     # 构建训练数据集：提供图像/掩码路径与统一的输入尺寸
     train_dataset = CrackSegmentationDataset(
@@ -96,6 +103,9 @@ def main():
 
     # 封装训练/验证流程的控制器，负责前向/反向与评估
     trainer = Trainer(model, optimizer, loss_fn, device)
+    # 循环外（main 里，for epoch 前）先定好一个可视化目录
+    vis_dir = os.path.join(exp_dir, "vis")
+    os.makedirs(vis_dir, exist_ok=True)
 
     # 训练主循环：从第 1 轮到 `epochs`，每轮先训练后验证
     for epoch in range(1, cfg.train.epochs + 1):
@@ -106,6 +116,17 @@ def main():
         print(
             f"Epoch {epoch}: train_loss={train_metrics['loss']:.4f}, "
             f"val_loss={val_metrics['loss']:.4f}"
+        )
+
+        # 只取val_loader里的1个batch图画，看训练趋势是足够了
+        visualize_predictions(
+            model=model,
+            dataloader=val_loader,
+            device=device,
+            save_dir=vis_dir,
+            epoch=epoch,
+            # 表示只看验证集第一个batch
+            max_batches=1,
         )
 
 

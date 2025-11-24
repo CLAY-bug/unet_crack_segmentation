@@ -1,6 +1,4 @@
 # src/unet_crack_segmentation/models/unet.py
-from asyncio import sleep
-
 import torch
 import torch.nn as nn
 
