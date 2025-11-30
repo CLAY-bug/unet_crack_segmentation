@@ -55,7 +55,7 @@ class CrackSegmentationDataset(Dataset):
         mask = (mask > 127).astype(np.float32)
         return mask
 
-    # 根据索引返回一堆（img，mask）
+    # 根据索引返回一对（img，mask）
     def __getitem__(self, idx):
         """获取指定索引的数据样本
         该方法根据索引加载对应的图像和掩码，并转换为PyTorch张量格式。

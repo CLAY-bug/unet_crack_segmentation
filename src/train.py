@@ -2,12 +2,6 @@
 
 整体流程：Yaml配置 -> Dataset/Dataloader -> UNet -> Loss -> Trainer
 
-该文件负责完整的训练流程组织，包括：
-1) 读取配置文件并解析超参数
-2) 构建训练/验证数据集与 DataLoader
-3) 实例化 UNet 模型、优化器与损失函数
-4) 通过 Trainer 执行训练与验证，并打印损失指标
-
 配置文件默认路径为 `./configs/default.yaml`，常用字段：
 - `data.root`：数据根目录
 - `data.train_images_dir` / `data.train_masks_dir`：训练集图像/掩码相对路径
@@ -30,7 +24,7 @@ from datetime import datetime
 from torch.utils.data import DataLoader  # 批量数据加载器
 from torch import nn  # 常用损失函数与网络组件
 
-from unet_crack_segmentation.utils.visualization import visualize_predictions
+from unet_crack_segmentation.utils.visualization import visualize_predictions # 可视化组件
 from unet_crack_segmentation.config import load_config  # 配置加载函数
 from unet_crack_segmentation.datasets.crack_dataset import CrackSegmentationDataset  # 裂缝分割数据集
 from unet_crack_segmentation.models.unet import UNet  # UNet 模型定义
@@ -47,6 +41,7 @@ def main():
     - 初始化 UNet 模型、优化器与损失函数
     - 逐轮训练与验证，输出损失指标
     """
+    # 用来为可视化文件进行标注
     run_id = datetime.now().strftime("%Y%m%d-%H%M%S")
 
     # 读取配置文件（默认位于项目根目录下的 `configs/default.yaml`）

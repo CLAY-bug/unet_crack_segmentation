@@ -1,4 +1,3 @@
-# src/unet_crack_segmentation/training/trainer.py
 """
 训练器模块
 该模块实现了用于模型训练和验证的Trainer类，封装了训练循环、验证循环和损失计算逻辑。
