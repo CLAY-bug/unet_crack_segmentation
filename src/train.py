@@ -24,7 +24,7 @@ from datetime import datetime
 from torch.utils.data import DataLoader  # 批量数据加载器
 from torch import nn  # 常用损失函数与网络组件
 
-from unet_crack_segmentation.utils.visualization import visualize_predictions # 可视化组件
+from unet_crack_segmentation.utils.visualization import visualize_predictions, visualize_feature_maps # 可视化组件
 from unet_crack_segmentation.config import load_config  # 配置加载函数
 from unet_crack_segmentation.datasets.crack_dataset import CrackSegmentationDataset  # 裂缝分割数据集
 from unet_crack_segmentation.models.unet import UNet  # UNet 模型定义
@@ -51,7 +51,10 @@ def main():
 
     # 当前这次实验的总目录，比如: ./experiments/unet_baseline_20251124-153022
     exp_dir = os.path.join(cfg.logging.save_dir, f"{cfg.experiment_name}_{run_id}")
+    # 每层的可视化特征图
+    feat_dir = os.path.join(exp_dir,"features")
     os.makedirs(exp_dir, exist_ok=True)
+    os.makedirs(feat_dir, exist_ok=True)
 
     # 构建训练数据集：提供图像/掩码路径与统一的输入尺寸
     train_dataset = CrackSegmentationDataset(
@@ -113,7 +116,7 @@ def main():
             f"val_loss={val_metrics['loss']:.4f}"
         )
 
-        # 只取val_loader里的1个batch图画，看训练趋势是足够了
+        # 结果可视化：只取val_loader里的1个batch图画，看训练趋势是足够了
         visualize_predictions(
             model=model,
             dataloader=val_loader,
@@ -123,6 +126,17 @@ def main():
             # 表示只看验证集第一个batch
             max_batches=1,
         )
+        # 中间特征图：每隔5个epoch看一次
+        if epoch % 5 == 0:
+            visualize_feature_maps(
+                model=model,
+                dataloader=val_loader,
+                device=device,
+                save_dir=feat_dir,
+                epoch=epoch,
+                max_batches=1,
+                max_channels=8
+            )
 
 
 # Windows 下使用多进程 DataLoader 需要主入口保护
